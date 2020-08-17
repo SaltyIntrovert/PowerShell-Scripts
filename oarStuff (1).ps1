@@ -253,7 +253,7 @@ elseif($status[$i] -ne "TA- Terminated") {                   #else make sure the
 #look for Manager in AD 
 $user = (Get-ADUser -Filter ({givenName -eq $supfAD -and surname -eq $suplAD -and employeeid -eq $supidAD}))   #query AD for user that might have same first name last name and ID#
 #get managers OU 
-$replaceInfo = "CN=$($($user).SurName)\\, $($($user).GivenName),"
+$replaceInfo = "SEtUpOUInfo,"
 $ouAD = $($user) -replace $replaceInfo,""  
 
     $mmdid = $MDMID[$i]
@@ -273,19 +273,19 @@ $ouAD = $($user) -replace $replaceInfo,""
     $compAD = $company[$i]
     $regionAD = $region[$i]
     $ouAD
-    $emailAD = "$usernameAD@sutterhealth.org"
-    $homeDAD ="\\DCPSSNA002C8\users$\$userNameAD"
+    $emailAD = "$usernameAD@domainName"
+    $homeDAD ="ouAddon\$userNameAD"
     $titleAD = $title[$i]
     $phoneAD = $phoneNumber[$i]
-    $pw = "Sutter12"
-    $pw1 = ConvertTo-SecureString "Sutter12" -AsPlainText -Force
+    $pw = "setpassword"
+    $pw1 = ConvertTo-SecureString "setPW" -AsPlainText -Force
     $depAD = $dep[$i].split('-')[1].split(' ')
     [string]$depNew = $depAD
     $depNew = $depNew.trim()
     #write-host $phoneAD
 
     $query = "INSERT INTO [OAR].[dbo].[newUsers] VALUES ('$mmdid','$userNameAD','$fAD','$lAD','$mAD','$idAD','$fullAD','$supfAD','$suplAD','$supidAD','$addressAD','$cityAD','$stateAD','$zipAD','$countyAD','$compAD','$regionAD','$aff','$titleAD','$depAD','$ouAD','$emailAD','','','','','','','','')"
-    Invoke-Sqlcmd -Query $query -ServerInstance "DCPWDBS1053"
+    Invoke-Sqlcmd -Query $query -ServerInstance "serverName"
 
     WRITE-HOST "new users info" $userNameAD $fAD $lAD $idAD
     #write-host $ouAD  $fAD $lAD $mAD $idAD $statusAD $fullAD $addressAD $cityAD $stateAD $zipAD $countyAD $supfAD $suplAD $supFullAD $supSamAD $compAD $regionAD $ouAD $emailAD $homeDAD $titleNewAD
