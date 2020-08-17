@@ -9,7 +9,7 @@ Program Description:
 
 This program pulls data from server (name) Which inputs data form 
 Program Microsoft SQL Server Management - file path Database -> Provisioning -> Tables -> dbo.CreateDevices -> Columns, every 15min
-And outputs to Program Microsoft SQL Server Management - file path Database -> [Terminations].[dbo].[emailData]
+And outputs to Program Microsoft SQL Server Management - file path Database -> [].[].[]
 The program creates a device in AD and sets it in the propper OU and AD
 thing to be cautious of is when the naming convention changes the function "prefix" might have to be updated. 
 When an OU or GG is changed you have to update the function "getOUAndGG"
@@ -105,16 +105,16 @@ Current state:
 function getOUAndGG([ref]$ou, $type, [ref]$gg){
     #these conditional statments check the name of the device and based on the type of device adds the propper "Orginizational Unit" and "Glabal Group" 
     if($type -eq "SHiPad"){  #ipad ou and GG
-        $ou.Value = "OU=IPads,OU=Device Accounts,OU=Service Accounts,OU=Sutter Health Support Services,DC=root,DC=sutterhealth,DC=org"
-        $gg.value = "SH.BYODWiFi_AllowAccess"
+        $ou.Value = "OUInput"
+        $gg.value = "GGforIpad"
     }
     elseif($type -eq "SHiPhone" -or $type -eq "SHiPod"){ #iphone and ipod ou and GG
-        $ou.Value = "OU=IPhones,OU=Device Accounts,OU=Service Accounts,OU=Sutter Health Support Services,DC=root,DC=sutterhealth,DC=org"
-        $gg.value = "SH.BYODWiFi_AllowAccess"
+        $ou.Value = "OUInput"
+        $gg.value = "SggForPhoe"
     }
     else{ #all other device ou and gg
-        $ou.Value = "OU=Device Accounts,OU=Service Accounts,OU=Sutter Health Support Services,DC=root,DC=sutterhealth,DC=org"
-        $gg.value = "SH.WiFi.GlucoseMeters"
+        $ou.Value = "OUInfo"
+        $gg.value = "GGfordevice"
     }
 }
 <#==================================
@@ -307,7 +307,7 @@ function createDevice(){
         
         #Change null to Yes in createConfirmed column on server  -MUST TURN ON WHEN SENT TO TEST AND PROD. 
         $query = "UPDATE [Provisioning].[dbo].[createDevices] SET createConfirm = 'Yes' WHERE id = '$id'"
-        Invoke-Sqlcmd -Query $query -ServerInstance "DCPWDBS1053" 
+        Invoke-Sqlcmd -Query $query -ServerInstance "ServerName" 
         
     }#end for each 
 
